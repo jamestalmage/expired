@@ -1,0 +1,26 @@
+{
+  "name": "expired",
+  "version": "0.0.1",
+  "description": "Manage expiring resources",
+  "main": "index.js",
+  "scripts": {
+    "test": "istanbul cover _mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jamestalmage/expired.git"
+  },
+  "author": "James Talmage <james@talmage.io>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jamestalmage/expired/issues"
+  },
+  "homepage": "https://github.com/jamestalmage/expired",
+  "devDependencies": {
+    "chai": "^3.0.0",
+    "istanbul": "^0.3.15",
+    "mocha": "^2.2.5",
+    "sinon": "^1.15.3",
+    "sinon-chai": "^2.8.0"
+  }
+}
