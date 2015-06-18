@@ -4,6 +4,8 @@ Simple API for keeping your expiring resources fresh!
 
 [![Code Climate](https://codeclimate.com/github/jamestalmage/expired/badges/gpa.svg)](https://codeclimate.com/github/jamestalmage/expired)
 [![Coverage Status](https://coveralls.io/repos/jamestalmage/expired/badge.svg?branch=master)](https://coveralls.io/r/jamestalmage/expired?branch=master)
+[![Dependency Status](https://david-dm.org/jamestalmage/expired.svg)](https://david-dm.org/jamestalmage/expired)
+[![devDependency Status](https://david-dm.org/jamestalmage/expired/dev-status.svg)](https://david-dm.org/jamestalmage/expired#info=devDependencies)
 
 [![NPM](https://nodei.co/npm/unexpired.png)](https://nodei.co/npm/unexpired/)
 
