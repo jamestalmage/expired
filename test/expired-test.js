@@ -1,7 +1,8 @@
 describe('expired', function(){
 
   var expired = require('..');
-  //var Promise = require('bluebird');
+  var Q;
+  var oldNextTick;
   var chai = require('chai');
   var expect = chai.expect;
   var sinon = require('sinon');
@@ -10,6 +11,7 @@ describe('expired', function(){
   var clock, fetch, cbs, cb1, cb2, cb3;
 
   beforeEach(function(){
+    oldNextTick = process.nextTick;
     cbs = [];
     fetch = sinon.spy(function fetchSpy(cb){
       cbs.push(cb);
@@ -17,10 +19,17 @@ describe('expired', function(){
     cb1 = sinon.spy(function cb1Spy(err, result){});
     cb2 = sinon.spy(function cb2Spy(err, result){});
     cb3 = sinon.spy(function cb3Spy(err, result){});
+
+    // hack to make sinon fakeTimers work with Q
+    // bluebird is a faster and preferred promise lib, but it's a lot easier to invalidate the require cache with Q.
+    delete require.cache[require.resolve('q')];
     clock = sinon.useFakeTimers();
+    process.nextTick = setImmediate;
+    Q = require('q');
   });
 
   afterEach(function(){
+    process.nextTick = oldNextTick;
     clock.restore();
   });
 
@@ -109,14 +118,14 @@ describe('expired', function(){
     expect(fetch.callCount).to.equal(2);
 
 
-    cbs[0](null, {result:"b", expires: 2000});
+    cbs[1](null, {result:"b", expires: 2000});
 
     expect(cb2.called).to.equal(false);
 
     clock.tick();
 
     expect(cb1).to.have.been.calledWith(null, {result:"a", expires: 1000});
-    expect(cb2).to.have.been.calledWith(null, {result:"b", expires: 2000});
+    expect(cb2).to.have.been.calledOnce.and.calledWith(null, {result:"b", expires: 2000});
 
     expect(fetch.callCount).to.equal(2);
   });
@@ -263,5 +272,49 @@ describe('expired', function(){
     cbs[1](null, {result:'b', expires:2000});
     clock.tick();
     expect(cb3.called).to.equal(true);
+  });
+
+  it('fetch can return a promise', function() {
+    var resolvers = [];
+    var resource = expired(function(cb){
+      var d = Q.defer();
+      cbs.push(cb);
+      resolvers.push(d);
+      return d.promise;
+    });
+
+    resource(cb1);
+    expect(resolvers.length).to.equal(1);
+    resolvers[0].resolve({result:'a', expires:1000});
+    clock.tick();
+    clock.tick();
+    expect(cb1).to.have.been.calledOnce.and.calledWith(null, {result:'a', expires:1000});
+
+    clock.tick(500);
+    resource(cb2);
+    expect(resolvers.length).to.equal(1);
+    clock.tick();
+    expect(cb2).to.have.been.calledOnce.and.calledWith(null, {result:'a', expires:1000});
+
+    clock.tick(500);
+    resource(cb3);
+    expect(resolvers.length).to.equal(2);
+    resolvers[1].resolve({result:'b', expires:2000});
+    clock.tick();
+    expect(cb3).to.have.been.calledOnce.and.calledWith(null, {result:'b', expires:2000});
+  });
+
+  it('guards against calling the same callback multiple times', function() {
+    var resource = expired(fetch);
+
+    resource(cb1);
+    cbs[0](null, {result:'a', expires:1000});
+    clock.tick(100);
+    cbs[0](null, {result:'b', expires:2000});
+    clock.tick(100);
+    cbs[0](null, {result:'c', expires:3000});
+    clock.tick(1000);
+
+    expect(cb1).to.have.been.calledOnce.and.calledWith(null, {result:'a', expires:1000});
   });
 });

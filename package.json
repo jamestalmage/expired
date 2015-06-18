@@ -18,11 +18,13 @@
   },
   "homepage": "https://github.com/jamestalmage/expired",
   "devDependencies": {
+    "bluebird": "^2.9.30",
     "chai": "^3.0.0",
     "codeclimate-test-reporter": "0.0.4",
     "coveralls": "^2.11.2",
     "istanbul": "^0.3.15",
     "mocha": "^2.2.5",
+    "q": "^1.4.1",
     "sinon": "^1.15.3",
     "sinon-chai": "^2.8.0"
   }
