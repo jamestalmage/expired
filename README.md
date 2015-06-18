@@ -1,12 +1,9 @@
 # expired
-Simple API for keeping your expiring resources fresh! 
+
 [![Code Climate](https://codeclimate.com/github/jamestalmage/expired/badges/gpa.svg)](https://codeclimate.com/github/jamestalmage/expired)
 [![Coverage Status](https://coveralls.io/repos/jamestalmage/expired/badge.svg?branch=master)](https://coveralls.io/r/jamestalmage/expired?branch=master)
 
-Sometimes resources expire
-
-## install
-`npm install --save expired`
+Simple API for keeping your expiring resources fresh! 
 
 ## usage
 
@@ -58,30 +55,30 @@ You can customize the behavior by passing an options object instead.
 Only `fetch` is required, everything else is optional.
 
 `fetch`: _Function_
-         The fetch function. 
-         It must accept a node style callback (i.e. `cb(err, result)`).
-         By default, the callback should be called with an object that has an `expires` property.
-         The `expires` property should be an integer, representing the time the resource expires 
-         (in milliseconds since epoch).
+>         The fetch function. 
+>         It must accept a node style callback (i.e. `cb(err, result)`).
+>         By default, the callback should be called with an object that has an `expires` property.
+>         The `expires` property should be an integer, representing the time the resource expires 
+>         (in milliseconds since epoch).
          
 `buffer`: _Number_
-         The safety buffer in milliseconds.
-         Forcibly refresh resources a little earlier than necessary.
-         This is useful for resources (like authentication tokens) that you want to use over the network. 
-         It mitigates problems arising from network latency and slightly off system clocks.
+>         The safety buffer in milliseconds.
+>         Forcibly refresh resources a little earlier than necessary.
+>         This is useful for resources (like authentication tokens) that you want to use over the network. 
+>         It mitigates problems arising from network latency and slightly off system clocks.
 
 `expiration`: _Function_
-         Alternate method for extracting the expiration from the fetch result.
-         It will be called with the fetch results, and must return a number representing the expiration 
-         (in milliseconds since epoch).
-         By default, it just returns the `expires` property of the fetch result.
-         Possible use would be parsing the `notAfter` result of an `X509` certificate.
+>         Alternate method for extracting the expiration from the fetch result.
+>         It will be called with the fetch results, and must return a number representing the expiration 
+>         (in milliseconds since epoch).
+>         By default, it just returns the `expires` property of the fetch result.
+>         Possible use would be parsing the `notAfter` result of an `X509` certificate.
 
 `transform`: _Function_
-         Transform the result before passing to callbacks.
+>         Transform the result before passing to callbacks.
          
 `copy`: _Function_
-         Create a defensive copy of the result before passing to each callback.
+>         Create a defensive copy of the result before passing to each callback.
          
 `now`: _Function_
-         Alternate method of fetching the current time.
+>         Alternate method of fetching the current time.
