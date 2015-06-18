@@ -25,9 +25,7 @@ describe('expired', function(){
   });
 
   it('will fetch a new resource on the first call', function() {
-    var resource = expired({
-      fetch: fetch
-    });
+    var resource = expired(fetch);
 
     expect(fetch.called).to.equal(false);
 
@@ -37,9 +35,7 @@ describe('expired', function(){
   });
 
   it('will pass the result to the callback', function() {
-    var resource = expired({
-      fetch: fetch
-    });
+    var resource = expired(fetch);
 
     expect(fetch.called).to.equal(false);
     resource(cb1);
@@ -54,9 +50,7 @@ describe('expired', function(){
   });
 
   it('will not re-fetch if before expiration', function() {
-    var resource = expired({
-      fetch: fetch
-    });
+    var resource = expired(fetch);
 
     resource(cb1);
 
@@ -77,9 +71,7 @@ describe('expired', function(){
   });
 
   it('will re-fetch after  expiration', function() {
-    var resource = expired({
-      fetch: fetch
-    });
+    var resource = expired(fetch);
 
     resource(cb1);
     cbs[0](null, {result:"a", expires: 1000});
@@ -130,9 +122,7 @@ describe('expired', function(){
   });
 
   it('will not fetch while current fetch is pending', function() {
-    var resource = expired({
-      fetch: fetch
-    });
+    var resource = expired(fetch);
 
     resource(cb1);
     resource(cb2);
