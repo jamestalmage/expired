@@ -1,9 +1,11 @@
-# unexpired
+# unexpired                          
+
+Simple API for keeping your expiring resources fresh! 
 
 [![Code Climate](https://codeclimate.com/github/jamestalmage/expired/badges/gpa.svg)](https://codeclimate.com/github/jamestalmage/expired)
 [![Coverage Status](https://coveralls.io/repos/jamestalmage/expired/badge.svg?branch=master)](https://coveralls.io/r/jamestalmage/expired?branch=master)
 
-Simple API for keeping your expiring resources fresh! 
+[![NPM](https://nodei.co/npm/unexpired.png)](https://nodei.co/npm/unexpired/)
 
 ## usage
 
@@ -35,6 +37,11 @@ The generated function will lazily call your `fetch` function as necessary to pr
   });
 ```
 
+Your `fetch` function may also allowed to return a promise instead of calling the supplied callback.
+`unexpired` will check for a `then` method on your return value, and use that.
+
+## options
+
 You can customize the behavior by passing an options object instead.
 
 ```javascript
@@ -47,8 +54,6 @@ You can customize the behavior by passing an options object instead.
     copy: fn // create a defensive copy for each callback
   });
 ```
-
-# options
 
 Only `fetch` is required, everything else is optional.
 
