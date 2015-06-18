@@ -129,4 +129,76 @@ describe('expired', function(){
     expect(fetch.callCount).to.equal(1);
   });
 
+  it('custom expiration property', function() {
+    var resource = expired({
+      fetch:fetch,
+      expires:'notAfter'
+    });
+
+    resource(cb1);
+
+    cbs[0](null, {result:'a', notAfter:2000});
+
+    clock.tick(1001);
+
+    resource(cb2);
+
+    expect(fetch.callCount).to.equal(1);
+
+    clock.tick(1001);
+
+    resource(cb3);
+
+    expect(fetch.callCount).to.equal(2);
+
+    cbs[1](null, {result:'b', notAfter:4000});
+
+    clock.tick();
+
+    expect(cb1).to.have.been.calledWith(null, {result:"a", notAfter: 2000});
+    expect(cb2).to.have.been.calledWith(null, {result:"a", notAfter: 2000});
+    expect(cb3).to.have.been.calledWith(null, {result:"b", notAfter: 4000});
+  });
+
+  it('custom expiry function', function() {
+    var resource = expired({
+      fetch:fetch,
+      expires:function(obj) {
+        return obj.notAfter * 1000;
+      }
+    });
+
+    resource(cb1);
+
+    cbs[0](null, {result:'a', notAfter:2});
+
+    clock.tick(1001);
+
+    resource(cb2);
+
+    expect(fetch.callCount).to.equal(1);
+
+    clock.tick(1001);
+
+    resource(cb3);
+
+    expect(fetch.callCount).to.equal(2);
+
+    cbs[1](null, {result:'b', notAfter:4});
+
+    clock.tick();
+
+    expect(cb1).to.have.been.calledWith(null, {result:"a", notAfter: 2});
+    expect(cb2).to.have.been.calledWith(null, {result:"a", notAfter: 2});
+    expect(cb3).to.have.been.calledWith(null, {result:"b", notAfter: 4});
+  });
+
+  it('bad expires option throws', function() {
+    expect(function() {
+      expired({
+        fetch:fetch,
+        expires:3
+      });
+    }).to.throw();
+  });
 });
