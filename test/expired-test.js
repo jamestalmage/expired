@@ -312,4 +312,31 @@ describe('expired', function(){
 
     expect(cb1).to.have.been.calledOnce.and.calledWith(null, {result:'a', expires:1000});
   });
+
+  it('custom now function', function() {
+    var time = 0;
+
+    var resource = expired({
+      fetch: fetch,
+      now: function() {
+        return time;
+      }
+    });
+
+    resource(cb1);
+    cbs[0](null, {result:'a', expires:1000});
+    clock.tick();
+    expect(cb1.callCount).to.equal(1);
+    time = 500;
+    resource(cb2);
+    clock.tick();
+    expect(cb2.callCount).to.equal(1);
+    time = 1000;
+    resource(cb3);
+    clock.tick();
+    expect(cb3.callCount).to.equal(0);
+    cbs[1](null, {result:'b', expires:2000});
+    clock.tick();
+    expect(cb3.callCount).to.equal(1);
+  });
 });
