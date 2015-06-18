@@ -1,4 +1,4 @@
-# expired
+# unexpired
 
 [![Code Climate](https://codeclimate.com/github/jamestalmage/expired/badges/gpa.svg)](https://codeclimate.com/github/jamestalmage/expired)
 [![Coverage Status](https://coveralls.io/repos/jamestalmage/expired/badge.svg?branch=master)](https://coveralls.io/r/jamestalmage/expired?branch=master)
@@ -10,9 +10,9 @@ Simple API for keeping your expiring resources fresh!
 Set up an expiring resource by providing a `fetch` function.
 
 ```javascript
-  var expired = require('expired');
+  var unexpired = require('unexpired');
   
-  var freshCertificate = expired(function fetch(cb){
+  var freshCertificate = unexpired(function fetch(cb){
     // fetch a fresh copy of whatever your resource you are after,
     // then pass the result and expiration to the callback
     cb(null, {
@@ -38,7 +38,7 @@ The generated function will lazily call your `fetch` function as necessary to pr
 You can customize the behavior by passing an options object instead.
 
 ```javascript
-  expired({
+  unexpired({
     fetch: function(cb){/* your fetch function */},
     buffer: 200, // safety buffer in milliseconds,
     now: fn, // alternate method for determining current time

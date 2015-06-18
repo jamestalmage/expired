@@ -1,5 +1,5 @@
 {
-  "name": "expired",
+  "name": "unexpired",
   "version": "0.0.0",
   "description": "Manage expiring resources",
   "main": "index.js",
