@@ -1,8 +1,8 @@
 describe('expired', function(){
 
   var expired = require('..');
-  var Q;
-  var oldNextTick;
+  var Promise = require('bluebird');
+  var oldScheduler;
   var chai = require('chai');
   var expect = chai.expect;
   var sinon = require('sinon');
@@ -11,7 +11,6 @@ describe('expired', function(){
   var clock, fetch, cbs, cb1, cb2, cb3;
 
   beforeEach(function(){
-    oldNextTick = process.nextTick;
     cbs = [];
     fetch = sinon.spy(function fetchSpy(cb){
       cbs.push(cb);
@@ -20,16 +19,12 @@ describe('expired', function(){
     cb2 = sinon.spy(function cb2Spy(err, result){});
     cb3 = sinon.spy(function cb3Spy(err, result){});
 
-    // hack to make sinon fakeTimers work with Q
-    // bluebird is a faster and preferred promise lib, but it's a lot easier to invalidate the require cache with Q.
-    delete require.cache[require.resolve('q')];
     clock = sinon.useFakeTimers();
-    process.nextTick = setImmediate;
-    Q = require('q');
+    oldScheduler = Promise.setScheduler(setTimeout);
   });
 
   afterEach(function(){
-    process.nextTick = oldNextTick;
+    Promise.setScheduler(oldScheduler);
     clock.restore();
   });
 
@@ -277,7 +272,7 @@ describe('expired', function(){
   it('fetch can return a promise', function() {
     var resolvers = [];
     var resource = expired(function(cb){
-      var d = Q.defer();
+      var d = Promise.pending();
       cbs.push(cb);
       resolvers.push(d);
       return d.promise;
