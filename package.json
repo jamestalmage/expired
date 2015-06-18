@@ -1,6 +1,6 @@
 {
   "name": "unexpired",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Simple API for keeping your expiring resources fresh!",
   "main": "index.js",
   "scripts": {
