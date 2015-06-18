@@ -1,6 +1,6 @@
 {
   "name": "expired",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "Manage expiring resources",
   "main": "index.js",
   "scripts": {

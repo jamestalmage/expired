@@ -42,15 +42,13 @@ You can customize the behavior by passing an options object instead.
     fetch: function(cb){/* your fetch function */},
     buffer: 200, // safety buffer in milliseconds,
     now: fn, // alternate method for determining current time
-    expiration: fn, // alternate method for extracting expiration from fetch result
+    expires: fn, // alternate method for extracting expiration from fetch result
     transform: fn  // transform the fetch result before passing to callbacks
     copy: fn // create a defensive copy for each callback
   });
 ```
 
 # options
-
-**DRAFT**: only `fetch` and `buffer` are currently implemented.
 
 Only `fetch` is required, everything else is optional.
 
@@ -69,13 +67,14 @@ Only `fetch` is required, everything else is optional.
          This is useful for resources (like authentication tokens) that you want to use over the network. 
          It mitigates problems arising from network latency and slightly off system clocks.
 
-  * `expiration`: _Function_
+  * `expires`: _Function_ or _String_
   
          Alternate method for extracting the expiration from the fetch result.
          It will be called with the fetch results, and must return a number representing the expiration 
          (in milliseconds since epoch).
          By default, it just returns the `expires` property of the fetch result.
          Possible use would be parsing the `notAfter` result of an `X509` certificate.
+         If you provide a string, it will use that named property of the fetch result.
 
   * `transform`: _Function_
   
