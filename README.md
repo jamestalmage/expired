@@ -2,11 +2,11 @@
 
 Simple API for keeping your expiring resources fresh! 
 
-[![Build Status](https://travis-ci.org/jamestalmage/expired.svg?branch=master)](https://travis-ci.org/jamestalmage/expired)
-[![Coverage Status](https://coveralls.io/repos/jamestalmage/expired/badge.svg?branch=master)](https://coveralls.io/r/jamestalmage/expired?branch=master)
-[![Code Climate](https://codeclimate.com/github/jamestalmage/expired/badges/gpa.svg)](https://codeclimate.com/github/jamestalmage/expired)
-[![Dependency Status](https://david-dm.org/jamestalmage/expired.svg)](https://david-dm.org/jamestalmage/expired)
-[![devDependency Status](https://david-dm.org/jamestalmage/expired/dev-status.svg)](https://david-dm.org/jamestalmage/expired#info=devDependencies)
+[![Build Status](https://travis-ci.org/jamestalmage/unexpired.svg?branch=master)](https://travis-ci.org/jamestalmage/unexpired)
+[![Coverage Status](https://coveralls.io/repos/jamestalmage/unexpired/badge.svg?branch=master)](https://coveralls.io/r/jamestalmage/unexpired?branch=master)
+[![Code Climate](https://codeclimate.com/github/jamestalmage/unexpired/badges/gpa.svg)](https://codeclimate.com/github/jamestalmage/unexpired)
+[![Dependency Status](https://david-dm.org/jamestalmage/unexpired.svg)](https://david-dm.org/jamestalmage/unexpired)
+[![devDependency Status](https://david-dm.org/jamestalmage/unexpired/dev-status.svg)](https://david-dm.org/jamestalmage/unexpired#info=devDependencies)
 
 [![NPM](https://nodei.co/npm/unexpired.png)](https://www.npmjs.com/package/unexpired/)
 
