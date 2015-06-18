@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jamestalmage/expired.git"
+    "url": "https://github.com/jamestalmage/unexpired.git"
   },
   "author": "James Talmage <james@talmage.io>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jamestalmage/expired/issues"
+    "url": "https://github.com/jamestalmage/unexpired/issues"
   },
-  "homepage": "https://github.com/jamestalmage/expired",
+  "homepage": "https://github.com/jamestalmage/unexpired",
   "devDependencies": {
     "bluebird": "^2.9.30",
     "chai": "^3.0.0",
