@@ -7,7 +7,7 @@ Simple API for keeping your expiring resources fresh!
 [![Dependency Status](https://david-dm.org/jamestalmage/expired.svg)](https://david-dm.org/jamestalmage/expired)
 [![devDependency Status](https://david-dm.org/jamestalmage/expired/dev-status.svg)](https://david-dm.org/jamestalmage/expired#info=devDependencies)
 
-[![NPM](https://nodei.co/npm/unexpired.png)](https://nodei.co/npm/unexpired/)
+[![NPM](https://nodei.co/npm/unexpired.png)](https://www.npmjs.com/package/unexpired/)
 
 ## usage
 
