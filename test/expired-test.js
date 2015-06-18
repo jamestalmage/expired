@@ -8,7 +8,7 @@ describe('expired', function(){
   var sinon = require('sinon');
   chai.use(require('sinon-chai'));
 
-  var clock, fetch, cbs, cb1, cb2, cb3;
+  var clock, fetch, cbs, cb1, cb2, cb3, cb4;
 
   beforeEach(function(){
     cbs = [];
@@ -18,6 +18,7 @@ describe('expired', function(){
     cb1 = sinon.spy(function cb1Spy(err, result){});
     cb2 = sinon.spy(function cb2Spy(err, result){});
     cb3 = sinon.spy(function cb3Spy(err, result){});
+    cb4 = sinon.spy(function cb4Spy(err, result){});
 
     clock = sinon.useFakeTimers();
     oldScheduler = Promise.setScheduler(setTimeout);
@@ -339,4 +340,33 @@ describe('expired', function(){
     clock.tick();
     expect(cb3.callCount).to.equal(1);
   });
+
+  it('prefetch will fetch before expired', function() {
+    var resource = expired({
+      fetch: fetch,
+      prefetch: 300
+    });
+
+    resource(cb1);
+    cbs[0](null, {result:'a', expires:1000});
+    clock.tick();
+    expect(cb1.callCount).to.equal(1);
+    expect(fetch.callCount).to.equal(1);
+    clock.tick(500);
+    resource(cb2);
+    clock.tick();
+    expect(cb2.callCount).to.equal(1);
+    expect(fetch.callCount).to.equal(1);
+    clock.tick(200);
+    resource(cb3);
+    clock.tick();
+    expect(cb3.callCount).to.equal(1);
+    expect(fetch.callCount, 'second fetch called').to.equal(2);
+    cbs[1](null, {result:'b', expires:2000});
+    clock.tick();
+    resource(cb4);
+    clock.tick();
+    expect(cb4).to.have.been.calledOnce.and.calledWith(null, {result:'b', expires:2000});
+  });
+
 });

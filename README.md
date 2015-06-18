@@ -40,8 +40,18 @@ The generated function will lazily call your `fetch` function as necessary to pr
   });
 ```
 
+## promises
 Your `fetch` function may also allowed to return a promise instead of calling the supplied callback.
-`unexpired` will check for a `then` method on your return value, and use that.
+`unexpired` will check for a `then` method on your return value, and use that. If you are using promises,
+you will likely want to use your promise library to "promisify" the generated function:
+
+```javascript
+  var resource = Promise.promisify(unexpired(function() {
+    return new Promise(resolve, reject) {
+      // do some work to fulfill the promise
+    }
+  }));
+```
 
 ## options
 
@@ -74,6 +84,19 @@ Only `fetch` is required, everything else is optional.
          Forcibly refresh resources a little earlier than necessary.
          This is useful for resources (like authentication tokens) that you want to use over the network. 
          It mitigates problems arising from network latency and slightly off system clocks.
+         Callbacks will never receive results that expire within `buffer` milliseconds.
+         Defaults to 0.
+         
+  * `prefetch`: _Number_
+  
+         Prefetch time in milliseconds.
+         Proactively fetch a new resource even before it is expired.
+         Any requests for the resource within `buffer + prefetch` ms of the expiration will trigger a fetch.
+         Unlike `buffer`, this value does not prevent incoming requests from being fulfilled by an existing
+         unexpired resource. Incoming requests will continue to be served by the unexpired resource until
+         the newly fetched resource is available.
+         This helps avoid latency on incoming requests by ensuring there is always an unexpired resource ready to go.
+         Defaults to 0.
 
   * `expires`: _Function_ or _String_
   
