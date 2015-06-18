@@ -201,4 +201,67 @@ describe('expired', function(){
       });
     }).to.throw();
   });
+
+  it('can supply custom transform functions', function() {
+    var resource = expired({
+      fetch:fetch,
+      transform: function(obj) {
+        return obj.result;
+      }
+    });
+
+    resource(cb1);
+
+    cbs[0](null, {result:'a', expires:1000});
+
+    clock.tick(1001);
+
+    resource(cb2);
+
+    cbs[1](null, {result:'b', expires:2000});
+  });
+
+  it('can create defensive copies', function() {
+    var resource = expired({
+      fetch: fetch,
+      copy: function(obj) {
+        return {
+          result: obj.result,
+          expires: obj.expires
+        };
+      }
+    });
+
+    cb1 = sinon.spy(function cb1Spy(err, result){
+      expect(result).to.eql({result:'a', expires:1000});
+      result.result = 'modified';
+    });
+
+    cb2 = sinon.spy(function cb2Spy(err, result){
+      expect(result).to.eql({result:'a', expires:1000});
+      result.result = 'modified';
+    });
+
+    cb3 = sinon.spy(function cb3Spy(err, result){
+      expect(result).to.eql({result:'b', expires:2000});
+      result.result = 'modified';
+    });
+
+    resource(cb1);
+
+    cbs[0](null, {result:'a', expires:1000});
+    clock.tick();
+    expect(cb1.called).to.equal(true);
+
+    clock.tick(501);
+    resource(cb2);
+    clock.tick();
+    expect(cb2.called).to.equal(true);
+
+    clock.tick(501);
+    resource(cb3);
+    cbs[1](null, {result:'b', expires:2000});
+    clock.tick();
+    expect(cb3.called).to.equal(true);
+  });
 });
