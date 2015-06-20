@@ -398,4 +398,48 @@ describe('expired', function(){
     clock.tick();
     expect(cb4).to.have.been.calledOnce.and.calledWith(null, {result:'b', expires:2000});
   });
+
+  it('pass buffer as string', function() {
+    var resource = expired({
+      fetch: fetch,
+      buffer: '2 seconds'
+    });
+
+    resource(cb1);
+    cbs[0](null, {result:'a', expires:'6000'});
+    clock.tick(3999);
+    resource(cb2);
+    clock.tick(0);
+    expect(fetch.callCount).to.equal(1);
+    clock.tick(1);
+    resource(cb3);
+    expect(fetch.callCount).to.equal(2);
+  });
+
+  it('will throw errors for nonsensical values', function() {
+    expect(function(){
+      expired('hello');
+    }).to.throw();
+
+    expect(function(){
+      expired({
+        fetch:'hello'
+      })
+    }).to.throw();
+
+    expect(function() {
+      expired({
+        fetch:fetch,
+        now: 3
+      })
+    }).to.throw();
+
+    expect(function() {
+      expired({
+        fetch:fetch,
+        buffer: 'blah'
+      })
+    }).to.throw();
+
+  });
 });

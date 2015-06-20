@@ -26,5 +26,8 @@
     "mocha": "^2.2.5",
     "sinon": "^1.15.3",
     "sinon-chai": "^2.8.0"
+  },
+  "dependencies": {
+    "duration-parser": "^1.0.0"
   }
 }
