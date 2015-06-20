@@ -2,7 +2,8 @@ describe('expired', function(){
 
   var expired = require('..');
   var Promise = require('bluebird');
-  var oldScheduler;
+  var unpromisify = require('unpromisify');
+  var oldScheduler, oldScheduler2;
   var chai = require('chai');
   var expect = chai.expect;
   var sinon = require('sinon');
@@ -22,10 +23,12 @@ describe('expired', function(){
 
     clock = sinon.useFakeTimers();
     oldScheduler = Promise.setScheduler(setTimeout);
+    oldScheduler2 = unpromisify.setScheduler(setTimeout);
   });
 
   afterEach(function(){
     Promise.setScheduler(oldScheduler);
+    unpromisify.setScheduler(oldScheduler2);
     clock.restore();
   });
 
@@ -394,6 +397,7 @@ describe('expired', function(){
     expect(cb3).to.have.been.calledOnce.and.calledWith(null, {result:'a', expires:1000});
     expect(fetch.callCount).to.equal(3);
     cbs[2](null, {result:'b', expires:2000});
+    clock.tick();
     resource(cb4);
     clock.tick();
     expect(cb4).to.have.been.calledOnce.and.calledWith(null, {result:'b', expires:2000});

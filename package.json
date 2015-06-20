@@ -28,6 +28,7 @@
     "sinon-chai": "^2.8.0"
   },
   "dependencies": {
-    "duration-parser": "^1.0.0"
+    "duration-parser": "^1.0.0",
+    "unpromisify": "0.0.1"
   }
 }
