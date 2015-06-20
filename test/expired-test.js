@@ -369,4 +369,33 @@ describe('expired', function(){
     expect(cb4).to.have.been.calledOnce.and.calledWith(null, {result:'b', expires:2000});
   });
 
+  it('prefetch retry on error', function() {
+    var resource = expired({
+      fetch: fetch,
+      prefetch: 500,
+      retry:200
+    });
+
+    resource(cb1);
+    cbs[0](null, {result:'a', expires:1000});
+    clock.tick(500);
+    resource(cb1);
+    expect(fetch.callCount).to.equal(2);
+    cbs[1](new Error('could not fetch'), null);
+    clock.tick();
+    clock.tick(100);
+    resource(cb2);
+    clock.tick();
+    expect(fetch.callCount).to.equal(2); // will not retry until additional 200ms have passed
+    expect(cb2).to.have.been.calledOnce.and.calledWith(null, {result:'a', expires:1000});
+    clock.tick(100);
+    resource(cb3);
+    clock.tick();
+    expect(cb3).to.have.been.calledOnce.and.calledWith(null, {result:'a', expires:1000});
+    expect(fetch.callCount).to.equal(3);
+    cbs[2](null, {result:'b', expires:2000});
+    resource(cb4);
+    clock.tick();
+    expect(cb4).to.have.been.calledOnce.and.calledWith(null, {result:'b', expires:2000});
+  });
 });
