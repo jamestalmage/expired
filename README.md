@@ -51,6 +51,8 @@ you will likely want to use your promise library to "promisify" the generated fu
       // do some work to fulfill the promise
     }
   }));
+  
+  resource().then(/* ... */);
 ```
 
 ## options
@@ -63,32 +65,32 @@ You can customize the behavior by passing an options object instead.
     buffer: 200, // safety buffer in milliseconds,
     now: fn, // alternate method for determining current time
     expires: fn, // alternate method for extracting expiration from fetch result
-    transform: fn  // transform the fetch result before passing to callbacks
-    copy: fn // create a defensive copy for each callback
+    transform: fn,  // transform the fetch result before passing to callbacks
+    copy: fn, // create a defensive copy for each callback,
+    prefetch: '2 hours', // try to prefetch 2 hours early
+    retry: '15 minutes' // retry prefetch every 15 minutes until expired
   });
 ```
 
 Only `fetch` is required, everything else is optional.
 
   * `fetch`: _Function_
-  
          The fetch function. 
          It must accept a node style callback (i.e. `cb(err, result)`).
          By default, the callback should be called with an object that has an `expires` property.
          The `expires` property should be an integer, representing the time the resource expires 
          (in milliseconds since epoch).
          
-  * `buffer`: _Number_
-  
+  * `buffer`: _Number_ or _String_
          The safety buffer in milliseconds.
          Forcibly refresh resources a little earlier than necessary.
          This is useful for resources (like authentication tokens) that you want to use over the network. 
          It mitigates problems arising from network latency and slightly off system clocks.
          Callbacks will never receive results that expire within `buffer` milliseconds.
+         String values will be parsed using [duration-parser](https://www.npmjs.com/package/duration-parser).
          Defaults to 0.
          
-  * `prefetch`: _Number_
-  
+  * `prefetch`: _Number_ or _String_
          Prefetch time in milliseconds.
          Proactively fetch a new resource even before it is expired.
          Any requests for the resource within `buffer + prefetch` ms of the expiration will trigger a fetch.
@@ -96,10 +98,15 @@ Only `fetch` is required, everything else is optional.
          unexpired resource. Incoming requests will continue to be served by the unexpired resource until
          the newly fetched resource is available.
          This helps avoid latency on incoming requests by ensuring there is always an unexpired resource ready to go.
+         String values will be parsed using [duration-parser](https://www.npmjs.com/package/duration-parser).
+         Defaults to 0.
+  
+  * `retry`: _Number_ or _String_
+         If a prefetch attempt fails, how long to wait before trying to prefetch again (in milliseconds).
+         String values will be parsed using [duration-parser](https://www.npmjs.com/package/duration-parser).
          Defaults to 0.
 
   * `expires`: _Function_ or _String_
-  
          Alternate method for extracting the expiration from the fetch result.
          It will be called with the fetch results, and must return a number representing the expiration 
          (in milliseconds since epoch).
@@ -108,13 +115,10 @@ Only `fetch` is required, everything else is optional.
          If you provide a string, it will use that named property of the fetch result.
 
   * `transform`: _Function_
-  
          Transform the result before passing to callbacks.
          
   * `copy`: _Function_
-  
          Create a defensive copy of the result before passing to each callback.
          
   * `now`: _Function_
-
          Alternate method of fetching the current time.
