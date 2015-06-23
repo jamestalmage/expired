@@ -9,7 +9,7 @@ describe('expired', function(){
   var sinon = require('sinon');
   chai.use(require('sinon-chai'));
 
-  var clock, fetch, cbs, cb1, cb2, cb3, cb4;
+  var clock, fetch, cbs, cb1, cb2, cb3, cb4, error;
 
   beforeEach(function(){
     cbs = [];
@@ -24,6 +24,8 @@ describe('expired', function(){
     clock = sinon.useFakeTimers();
     oldScheduler = Promise.setScheduler(setTimeout);
     oldScheduler2 = unpromisify.setScheduler(setTimeout);
+
+    error = new Error('blah');
   });
 
   afterEach(function(){
@@ -444,6 +446,32 @@ describe('expired', function(){
         buffer: 'blah'
       })
     }).to.throw();
+  });
 
+  it('an initial error will propogate to the queue', function() {
+    var resource = expired(fetch);
+
+    resource(cb1);
+    resource(cb2);
+    expect(fetch.callCount).to.equal(1);
+    cbs[0](error);
+    expect(cb1.called, 'errors should be async also').to.equal(false);
+    clock.tick();
+    expect(cb1).to.have.been.calledOnce.and.calledWith(error);
+    expect(cb2).to.have.been.calledOnce.and.calledWith(error);
+  });
+
+  it('an error after expiration will propogate to the queue', function() {
+    var resource = expired(fetch);
+
+    resource(cb1);
+    clock.tick();
+    cbs[0](null, {result:'a', expires:100});
+    clock.tick(100);
+    resource(cb2);
+    clock.tick();
+    cbs[1](error);
+    clock.tick();
+    expect(cb2).to.have.been.calledOnce.and.calledWith(error);
   });
 });
