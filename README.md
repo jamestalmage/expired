@@ -81,7 +81,7 @@ Only `fetch` is required, everything else is optional.
          The `expires` property should be an integer, representing the time the resource expires 
          (in milliseconds since epoch).
          
-  * `buffer`: _Number_ or _String_
+  * `buffer`: _Number_ or _String_ <br/>
          The safety buffer in milliseconds.
          Forcibly refresh resources a little earlier than necessary.
          This is useful for resources (like authentication tokens) that you want to use over the network. 
@@ -90,7 +90,7 @@ Only `fetch` is required, everything else is optional.
          String values will be parsed using [duration-parser](https://www.npmjs.com/package/duration-parser).
          Defaults to 0.
          
-  * `prefetch`: _Number_ or _String_
+  * `prefetch`: _Number_ or _String_ <br/>
          Prefetch time in milliseconds.
          Proactively fetch a new resource even before it is expired.
          Any requests for the resource within `buffer + prefetch` ms of the expiration will trigger a fetch.
@@ -101,12 +101,12 @@ Only `fetch` is required, everything else is optional.
          String values will be parsed using [duration-parser](https://www.npmjs.com/package/duration-parser).
          Defaults to 0.
   
-  * `retry`: _Number_ or _String_
+  * `retry`: _Number_ or _String_ <br/>
          If a prefetch attempt fails, how long to wait before trying to prefetch again (in milliseconds).
          String values will be parsed using [duration-parser](https://www.npmjs.com/package/duration-parser).
          Defaults to 0.
 
-  * `expires`: _Function_ or _String_
+  * `expires`: _Function_ or _String_ <br/>
          Alternate method for extracting the expiration from the fetch result.
          It will be called with the fetch results, and must return a number representing the expiration 
          (in milliseconds since epoch).
@@ -114,11 +114,11 @@ Only `fetch` is required, everything else is optional.
          Possible use would be parsing the `notAfter` result of an `X509` certificate.
          If you provide a string, it will use that named property of the fetch result.
 
-  * `transform`: _Function_
+  * `transform`: _Function_ <br/>
          Transform the result before passing to callbacks.
          
-  * `copy`: _Function_
+  * `copy`: _Function_ <br/>
          Create a defensive copy of the result before passing to each callback.
          
-  * `now`: _Function_
+  * `now`: _Function_ <br/>
          Alternate method of fetching the current time.
