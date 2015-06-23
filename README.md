@@ -74,7 +74,7 @@ You can customize the behavior by passing an options object instead.
 
 Only `fetch` is required, everything else is optional.
 
-  * `fetch`: _Function_
+  * `fetch`: _Function_ <br/>
          The fetch function. 
          It must accept a node style callback (i.e. `cb(err, result)`).
          By default, the callback should be called with an object that has an `expires` property.
