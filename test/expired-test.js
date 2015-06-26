@@ -448,7 +448,7 @@ describe('expired', function(){
     }).to.throw();
   });
 
-  it('an initial error will propogate to the queue', function() {
+  it('an initial error will propagate to the queue', function() {
     var resource = expired(fetch);
 
     resource(cb1);
@@ -461,7 +461,7 @@ describe('expired', function(){
     expect(cb2).to.have.been.calledOnce.and.calledWith(error);
   });
 
-  it('an error after expiration will propogate to the queue', function() {
+  it('an error after expiration will propagate to the queue', function() {
     var resource = expired(fetch);
 
     resource(cb1);
@@ -473,5 +473,20 @@ describe('expired', function(){
     cbs[1](error);
     clock.tick();
     expect(cb2).to.have.been.calledOnce.and.calledWith(error);
+  });
+
+  it('expirations as timestamps', function() {
+    var resource = expired(fetch);
+    resource(cb1);
+    clock.tick();
+    cbs[0](null, {result:'a', expires:'Thu, 01 Jan 1970 00:00:01 GMT'})
+    clock.tick(999);
+    resource(cb2);
+    clock.tick();
+    expect(fetch.callCount).to.equal(1);
+    clock.tick(1);
+    resource(cb3);
+    clock.tick();
+    expect(fetch.callCount).to.equal(2);
   });
 });
