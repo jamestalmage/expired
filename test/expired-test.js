@@ -3,13 +3,12 @@ describe('expired', function(){
   var expired = require('..');
   var Promise = require('bluebird');
   var unpromisify = require('unpromisify');
-  var oldScheduler, oldScheduler2;
   var chai = require('chai');
   var expect = chai.expect;
   var sinon = require('sinon');
   chai.use(require('sinon-chai'));
 
-  var clock, fetch, cbs, cb1, cb2, cb3, cb4, error;
+  var clock, oldScheduler, oldScheduler2, fetch, cbs, cb1, cb2, cb3, cb4, error;
 
   beforeEach(function(){
     cbs = [];
@@ -479,7 +478,7 @@ describe('expired', function(){
     var resource = expired(fetch);
     resource(cb1);
     clock.tick();
-    cbs[0](null, {result:'a', expires:'Thu, 01 Jan 1970 00:00:01 GMT'})
+    cbs[0](null, {result:'a', expires:'Thu, 01 Jan 1970 00:00:01 GMT'});
     clock.tick(999);
     resource(cb2);
     clock.tick();

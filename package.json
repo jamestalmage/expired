@@ -29,6 +29,6 @@
   },
   "dependencies": {
     "duration-parser": "^1.0.0",
-    "unpromisify": "^0.1.2"
+    "unpromisify": "^0.2.0"
   }
 }
