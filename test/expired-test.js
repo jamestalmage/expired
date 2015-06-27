@@ -489,6 +489,21 @@ describe('expired', function(){
     expect(fetch.callCount).to.equal(2);
   });
 
+  it('expirations as Date objects', function() {
+    var resource = expired(fetch);
+    resource(cb1);
+    clock.tick();
+    cbs[0](null, {result:'a', expires:new Date(1000)});
+    clock.tick(999);
+    resource(cb2);
+    clock.tick();
+    expect(fetch.callCount).to.equal(1);
+    clock.tick(1);
+    resource(cb3);
+    clock.tick();
+    expect(fetch.callCount).to.equal(2);
+  });
+
   it('error in copy function is passed to waiting callbacks', function() {
     var error = new Error('myError');
     var copy = sinon.stub();
