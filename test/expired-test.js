@@ -488,4 +488,38 @@ describe('expired', function(){
     clock.tick();
     expect(fetch.callCount).to.equal(2);
   });
+
+  it('error in copy function is passed to waiting callbacks', function() {
+    var error = new Error('myError');
+    var copy = sinon.stub();
+    copy.throws(error);
+    var resource = expired({
+      fetch: fetch,
+      copy: copy
+    });
+
+    resource(cb1);
+    clock.tick();
+    cbs[0](null, {result:'a', expires:2000});
+    expect(cb1.called).to.equal(false);
+    clock.tick();
+    expect(cb1).to.have.been.calledOnce.and.calledWith(error);
+  });
+
+  it('error in transform function is passed to waiting callbacks', function() {
+    var error = new Error('myError');
+    var copy = sinon.stub();
+    copy.throws(error);
+    var resource = expired({
+      fetch: fetch,
+      transform: copy
+    });
+
+    resource(cb1);
+    clock.tick();
+    cbs[0](null, {result:'a', expires:2000});
+    expect(cb1.called).to.equal(false);
+    clock.tick();
+    expect(cb1).to.have.been.calledOnce.and.calledWith(error);
+  });
 });
